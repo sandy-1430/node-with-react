@@ -21,7 +21,7 @@ import {
 const signup = (username, email, password, phone, gender, course, address, fathername, mothername) => async (dispatch) => {
     dispatch({ type: USER_REGISTER_REQUEST, payload: {} });
     try {
-        const { data } = await Axios.post("/student/signup",
+        const { data } = await Axios.post("https://sandy-node-restapi.herokuapp.com/student/signup",
             {
                 username: username,
                 email: email,
@@ -43,7 +43,7 @@ const signup = (username, email, password, phone, gender, course, address, fathe
 const profileupdate = (_id, username, email, phone, gender, course, address, fathername, mothername) => async (dispatch) => {
     dispatch({ type: PROFILE_UPDATE_REQUEST, payload: { username } });
     try {
-        const { data } = await Axios.put("/student/login",
+        const { data } = await Axios.put("https://sandy-node-restapi.herokuapp.com/student/login",
             {
                 _id: _id,
                 username: username,
@@ -66,7 +66,7 @@ const profileupdate = (_id, username, email, phone, gender, course, address, fat
 const signin = (username, password) => async (dispatch) => {
     dispatch({ type: USER_SIGNIN_REQUEST, payload: { username } });
     try {
-        const { data } = await Axios.post("/student/login", { email: username, password: password });
+        const { data } = await Axios.post("https://sandy-node-restapi.herokuapp.com/student/login", { email: username, password: password });
         dispatch({ type: USER_SIGNIN_SUCCESS, payload: data.token });
         localStorage.setItem("userInfo", JSON.stringify(data.token));
     } catch (error) {
@@ -77,7 +77,7 @@ const signin = (username, password) => async (dispatch) => {
 const admin_signin = (username, password) => async (dispatch) => {
     dispatch({ type: ADMIN_SIGNIN_REQUEST, payload: { username } });
     try {
-        const { data } = await Axios.post("/user/login", { email: username, password: password });
+        const { data } = await Axios.post("https://sandy-node-restapi.herokuapp.com/user/login", { email: username, password: password });
         dispatch({ type: ADMIN_SIGNIN_SUCCESS, payload: data.token });
         localStorage.setItem("admininfo", JSON.stringify(data.token));
     } catch (error) {
@@ -88,7 +88,7 @@ const admin_signin = (username, password) => async (dispatch) => {
 const change_password = (email, password) => async (dispatch) => {
     dispatch({ type: CHANGE_PASSWORD_REQUEST, payload: { email } });
     try {
-        const { data } = await Axios.post("/student/forget-password", { email: email, password: password });
+        const { data } = await Axios.post("https://sandy-node-restapi.herokuapp.com/student/forget-password", { email: email, password: password });
         dispatch({ type: CHANGE_PASSWORD_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: CHANGE_PASSWORD_FAIL, payload: error.message });
