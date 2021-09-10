@@ -69,6 +69,10 @@ export default function AdminResults() {
         setSemester('');
     }
 
+    const propSem = () => {
+        setSemester('');
+    }
+
 
     return (
         <div>
@@ -96,13 +100,8 @@ export default function AdminResults() {
                                         </IconButton>
                                     </div>
                                     <DialogContent dividers>
-                                        <AddStudent />
+                                        <AddStudent close={handleClose} semupdate={propSem} />
                                     </DialogContent>
-                                    <DialogActions>
-                                        <Button autoFocus onClick={handleClose} color="primary">
-                                            Save changes
-                                        </Button>
-                                    </DialogActions>
                                 </Dialog>
                             </div>
                         </div>

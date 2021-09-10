@@ -8,7 +8,10 @@ import {
     ADMIN_RESULT_FAIL,
     EDIT_RESULT_REQUEST,
     EDIT_RESULT_SUCCESS,
-    EDIT_RESULT_FAIL
+    EDIT_RESULT_FAIL,
+    ADD_STUDENT_REQUEST,
+    ADD_STUDENT_SUCCESS,
+    ADD_STUDENT_FAIL
 } from "../constants/studentConstants";
 
 
@@ -32,7 +35,6 @@ const adminResult = (sem) => async (dispatch) => {
     }
 }
 
-
 const editResult = (sem, rollno, sub, code, marks) => async (dispatch) => {
     dispatch({ type: EDIT_RESULT_REQUEST, payload: { sem } });
     try {
@@ -43,4 +45,15 @@ const editResult = (sem, rollno, sub, code, marks) => async (dispatch) => {
     }
 }
 
-export { studentResult, adminResult, editResult };
+const Studentadd = (sem, students) => async (dispatch) => {
+    dispatch({ type: ADD_STUDENT_REQUEST, payload: { sem } });
+    try {
+        const { data } = await Axios.post('https://sandy-node-restapi.herokuapp.com/result/student', { semester: sem, students: students });
+        dispatch({ type: ADD_STUDENT_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: ADD_STUDENT_FAIL, payload: error.message });
+    }
+}
+
+
+export { studentResult, adminResult, editResult, Studentadd };

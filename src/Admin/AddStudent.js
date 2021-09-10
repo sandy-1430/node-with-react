@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import Axios from "axios";
 import { Button, TextField, MenuItem, Select, FormControl, InputLabel, IconButton } from '@material-ui/core';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useDispatch } from 'react-redux';
+import { Studentadd } from '../actions/studentAction';
 
-export default function AddStudent() {
+export default function AddStudent(props) {
+    const dispatch = useDispatch();
     const [sem, setSem] = useState('');
     const [addstu, setAddstu] = useState([
         { rollno: '', result: [{ code: '', subject: '', marks: '' }] },
@@ -15,7 +17,7 @@ export default function AddStudent() {
         setSem(e.target.value);
     }
 
-    const Studentadd = () => {
+    const Student_add = () => {
         setAddstu([...addstu, { rollno: '', result: [{ code: '', subject: '', marks: '' }] }]);
     }
 
@@ -73,14 +75,9 @@ export default function AddStudent() {
     }
 
     const onsubmit = () => {
-        Axios.post('/result/student', { semester: sem, students: addstu })
-            .then((res) => {
-                console.log(res)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        console.log(sem, addstu)
+        dispatch(Studentadd(sem, addstu));
+        props.close();
+        props.semupdate();
     }
 
     return (
@@ -94,9 +91,6 @@ export default function AddStudent() {
                             <MenuItem value={2}>2</MenuItem>
                         </Select>
                     </FormControl>
-                </div>
-                <div className="col-lg-3">
-                    <Button onClick={onsubmit} variant="contained" color="primary">Submit</Button>
                 </div>
             </div>
             {addstu.map((student, key) => (
@@ -162,7 +156,7 @@ export default function AddStudent() {
                         })}
                     </div>
                     <div className="col-lg-2">
-                        <IconButton color="primary" onClick={Studentadd}>
+                        <IconButton color="primary" onClick={Student_add}>
                             <AddCircleIcon />
                         </IconButton>
                         <IconButton color="secondary" disabled={addstu.length === 1} onClick={() => RemoveStudent(key)}>
@@ -171,8 +165,11 @@ export default function AddStudent() {
                     </div>
                 </div>
             ))}
-
-
+            <div className="row">
+                <div className="col-lg-12 text-end">
+                    <Button onClick={onsubmit} variant="contained" color="primary">Add Student</Button>
+                </div>
+            </div>
         </div>
     )
 }

@@ -7,7 +7,10 @@ import {
     ADMIN_RESULT_FAIL,
     EDIT_RESULT_REQUEST,
     EDIT_RESULT_SUCCESS,
-    EDIT_RESULT_FAIL
+    EDIT_RESULT_FAIL,
+    ADD_STUDENT_REQUEST,
+    ADD_STUDENT_SUCCESS,
+    ADD_STUDENT_FAIL
 } from "../constants/studentConstants";
 
 function studentResultReducer(state = {}, action) {
@@ -29,6 +32,12 @@ function studentResultReducer(state = {}, action) {
         case EDIT_RESULT_SUCCESS:
             return { loading: false, editresult: action.payload };
         case EDIT_RESULT_FAIL:
+            return { loading: false, error: action.payload };
+        case ADD_STUDENT_REQUEST:
+            return { loading: true };
+        case ADD_STUDENT_SUCCESS:
+            return { loading: false, Studentadd: action.payload };
+        case ADD_STUDENT_FAIL:
             return { loading: false, error: action.payload };
         default:
             return state;
