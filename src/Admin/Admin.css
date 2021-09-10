@@ -1,0 +1,7 @@
+
+.cst_table td{
+    padding: 10px;
+}
+.nested_table td , .nested_table th{
+    padding: 8px;
+}

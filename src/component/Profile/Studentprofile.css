@@ -1,0 +1,30 @@
+.user-profile{
+    background-color: #edf2f7;
+}
+.user-profile p{
+    margin: 0;
+}
+
+.profile_card p{
+    margin-bottom: 5px;
+}
+
+.profile_card .roll_no{
+    font-size: 15px;
+}
+
+.profile_card .course{
+    font-size: 16px;
+}
+.MuiAccordion-root.Mui-expanded{
+    margin: 0 !important;
+}
+.MuiAccordionSummary-content.Mui-expanded{
+    margin: 12px 0 !important;
+}
+.MuiAccordionSummary-root.Mui-expanded{
+    min-height: 48px !important;
+}
+.pos-rel{
+    position: relative;
+}

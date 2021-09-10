@@ -1,0 +1,15 @@
+.studentlogin.active .student_signin , .student_signup , .student_forget_pass , .studentlogin.forget_pass .student_signin{
+    display: none;
+}
+.studentlogin.active .student_signup , .student_signin , .studentlogin.forget_pass .student_forget_pass{
+    display: block;
+}
+.student_signup .MuiAlert-icon{
+    padding: 5px 0;
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.student_signup .MuiAlert-message{
+    padding: 6px 0;
+}
