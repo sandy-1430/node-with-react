@@ -5,9 +5,12 @@ import { Table, TableBody, TextField, TableCell, TableContainer, TableHead, Tabl
 import { useHistory } from "react-router-dom";
 import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddStudent from './AddStudent';
-import { adminResult, editResult } from '../actions/studentAction';
+import { adminResult, editResult, subjectAdd } from '../actions/adminAction';
 import Loadingbox from '../component/Loadingbox';
+import { deleteSubject } from '../actions/adminAction';
 
 
 export default function AdminResults() {
@@ -15,6 +18,7 @@ export default function AdminResults() {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [editopen, setEditopen] = useState(false);
+    const [edit, setEdit] = useState(false);
     const [semester, setSemester] = useState('');
     const [studinfo, setStudinfo] = useState([]);
 
@@ -24,8 +28,6 @@ export default function AdminResults() {
     const Result = useSelector(state => state.studentResult);
     const { loading, results } = Result;
     let get_result = results ? results.result : '';
-
-    console.log(get_result && get_result[0].students)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -37,11 +39,13 @@ export default function AdminResults() {
 
     const editclose = () => {
         setEditopen(false);
+        setStudinfo(['']);
+        setEdit(false);
     }
 
-    const selectsem = (e) => {
-        setSemester(e.target.value);
-        dispatch(adminResult(e.target.value));
+    const selectsem = (value) => {
+        setSemester(value);
+        dispatch(adminResult(value));
     }
 
     const edit_result = (sem, rollno, sub, code, marks) => {
@@ -49,8 +53,14 @@ export default function AdminResults() {
         if (sem && rollno && sub && code && marks) {
             const obj = { semester: sem, rollno: rollno, subject: sub, code: code, marks: marks };
             setStudinfo([obj]);
+            setEdit(true);
             setEditopen(true);
         }
+    }
+
+    const delete_subject =(sem, rollno, code)=>{
+        dispatch(deleteSubject(sem,rollno,code));
+        setSemester('');
     }
 
     const Editvalues = (e, index) => {
@@ -64,8 +74,13 @@ export default function AdminResults() {
     }
 
     const SaveStudinfo = () => {
-        dispatch(editResult(studinfo[0].semester, studinfo[0].rollno, studinfo[0].subject, studinfo[0].code, studinfo[0].marks));
-        setEditopen(false);
+        if(edit){
+            dispatch(editResult(studinfo[0].semester, studinfo[0].rollno, studinfo[0].subject, studinfo[0].code, studinfo[0].marks));
+            setEditopen(false);
+        }else{
+            dispatch(subjectAdd(studinfo[0].semester, studinfo[0].rollno, studinfo[0].subject, studinfo[0].code, studinfo[0].marks));
+            setEditopen(false);
+        }  
         setSemester('');
     }
 
@@ -73,6 +88,14 @@ export default function AdminResults() {
         setSemester('');
     }
 
+    const addsubject = (sem,rollno) =>{
+        setStudinfo(['']);
+        if(sem && rollno){
+            const obj = { semester: sem, rollno: rollno, subject: '', code: '', marks: '' };
+            setStudinfo([obj]);
+            setEditopen(true);
+        }
+    }
 
     return (
         <div>
@@ -84,7 +107,7 @@ export default function AdminResults() {
                     <div className="container my-3">
                         <div className="row">
                             <div className="col-lg-4 mb-4">
-                                <select className="form-control mb-3" value={semester} onChange={((e) => selectsem(e))}>
+                                <select className="form-control mb-3" value={semester} onChange={((e) => selectsem(e.target.value))}>
                                     <option value="">Select Semester</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -110,35 +133,42 @@ export default function AdminResults() {
                                 <Table aria-label="simple table" className="cst_table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Roll No</TableCell>
+                                            <TableCell align="center">Roll No</TableCell>
                                             <TableCell align="center">Results</TableCell>
+                                            <TableCell align="center">Add Subject</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {console.log(get_result)}
                                         {get_result && get_result[0].students.map((row) => (
                                             <TableRow>
-                                                <TableCell>{row.rollno}</TableCell>
+                                                <TableCell align="center">{row.rollno}</TableCell>
                                                 <TableCell>
                                                     <Table className="nested_table">
                                                         <TableHead>
                                                             <TableRow>
-                                                                <TableCell>Subject</TableCell>
+                                                                <TableCell>Subject Name</TableCell>
                                                                 <TableCell>Subject Code</TableCell>
                                                                 <TableCell>Marks</TableCell>
-                                                                <TableCell>Edit</TableCell>
+                                                                <TableCell align="center">Edit</TableCell>
+                                                                <TableCell align="center">Remove</TableCell>
                                                             </TableRow>
                                                         </TableHead>
                                                         {row.result.map((x) => (
                                                             <TableRow>
-                                                                <TableCell width="25%">{x.subject}</TableCell>
+                                                                <TableCell width="35%">{x.subject}</TableCell>
                                                                 <TableCell>{x.code}</TableCell>
                                                                 <TableCell>{x.marks}</TableCell>
-                                                                <TableCell><Link onClick={() => edit_result(get_result[0].semester, row.rollno, x.subject, x.code, x.marks)}><EditIcon color="primary" /></Link></TableCell>
+                                                                <TableCell align="center">
+                                                                    <Link onClick={() => edit_result(get_result[0].semester, row.rollno, x.subject, x.code, x.marks)}><EditIcon color="primary" /></Link>
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    <Link onClick={() => delete_subject(get_result[0].semester, row.rollno, x.code)}><DeleteIcon color="secondary" /></Link>
+                                                                </TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </Table>
                                                 </TableCell>
+                                                <TableCell align="center"><Link onClick={()=>addsubject(get_result[0].semester,row.rollno)}><AddCircleIcon color="primary" /></Link></TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -147,39 +177,40 @@ export default function AdminResults() {
                             : ''}
 
                         <Dialog open={editopen} onClose={editclose} aria-labelledby="edit-student-info">
-                            <DialogTitle id="edit-student-info">Edit Student Details</DialogTitle>
+                            <DialogTitle id="edit-student-info"> 
+                                {edit ? "Edit Subject Details" : "Add Student"}
+                            </DialogTitle>
                             <DialogContent>
-                                {studinfo.map((edit, index) => {
-                                    return <div>
-                                        <TextField
-                                            autoFocus
-                                            margin="normal"
-                                            name="subject"
-                                            label="Enter Subject"
-                                            value={edit.subject}
-                                            fullWidth
-                                            onChange={e => Editvalues(e, index)}
-                                        />
-                                        <TextField
-                                            autoFocus
-                                            margin="normal"
-                                            name="code"
-                                            label="Enter Subject Code"
-                                            value={edit.code}
-                                            fullWidth
-                                            onChange={e => Editvalues(e, index)}
-                                        />
-                                        <TextField
-                                            autoFocus
-                                            margin="normal"
-                                            name="marks"
-                                            label="Enter Marks"
-                                            value={edit.marks}
-                                            fullWidth
-                                            onChange={e => Editvalues(e, index)}
-                                        />
-                                    </div>
-                                })}
+                                {studinfo.map((sub, index) => {
+                                        return <div>
+                                            <TextField
+                                                autoFocus
+                                                name="code"
+                                                label="Enter Subject Code"
+                                                value={sub.code}
+                                                fullWidth
+                                                disabled={edit ? true : false}
+                                                onChange={e => Editvalues(e, index)}
+                                            />
+                                            <TextField
+                                                autoFocus={edit ? true : false}
+                                                margin="normal"
+                                                name="subject"
+                                                label="Enter Subject"
+                                                value={sub.subject}
+                                                fullWidth
+                                                onChange={e => Editvalues(e, index)}
+                                            />
+                                            <TextField
+                                                margin="normal"
+                                                name="marks"
+                                                label="Enter Marks"
+                                                value={sub.marks}
+                                                fullWidth
+                                                onChange={e => Editvalues(e, index)}
+                                            />
+                                        </div>
+                                    })}
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={editclose} color="primary">

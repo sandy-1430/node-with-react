@@ -4,7 +4,7 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useDispatch } from 'react-redux';
-import { Studentadd } from '../actions/studentAction';
+import { Studentadd } from '../actions/adminAction';
 
 export default function AddStudent(props) {
     const dispatch = useDispatch();
