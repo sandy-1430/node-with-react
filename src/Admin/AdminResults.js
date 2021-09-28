@@ -8,7 +8,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddStudent from './AddStudent';
-import { adminResult, editResult, subjectAdd } from '../actions/adminAction';
+import { adminResult, deleteStudent, editResult, subjectAdd } from '../actions/adminAction';
 import Loadingbox from '../component/Loadingbox';
 import { deleteSubject } from '../actions/adminAction';
 
@@ -28,6 +28,18 @@ export default function AdminResults() {
     const Result = useSelector(state => state.studentResult);
     const { loading, results } = Result;
     let get_result = results ? results.result : '';
+    if(get_result.length){
+        get_result[0].students.sort(compare);
+        function compare( a, b ) {
+            if ( parseFloat(a.rollno) < parseFloat(b.rollno) ){
+                return -1;
+            }
+            if ( parseFloat(a.rollno) > parseFloat(b.rollno) ){
+                return 1;
+            }
+            return 0;
+        }
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -45,7 +57,9 @@ export default function AdminResults() {
 
     const selectsem = (value) => {
         setSemester(value);
-        dispatch(adminResult(value));
+        if(value){
+            dispatch(adminResult(value));
+        }        
     }
 
     const edit_result = (sem, rollno, sub, code, marks) => {
@@ -63,7 +77,13 @@ export default function AdminResults() {
         setSemester('');
     }
 
+    const removestud = (sem, rollno) =>{
+        dispatch(deleteStudent(sem,rollno));
+        setSemester('');
+    }
+
     const Editvalues = (e, index) => {
+        console.log(studinfo[index][e.target.name])
         const edit = studinfo.map((x, key) => {
             if (key === index) {
                 x[e.target.name] = e.target.value;
@@ -108,7 +128,7 @@ export default function AdminResults() {
                         <div className="row">
                             <div className="col-lg-4 mb-4">
                                 <select className="form-control mb-3" value={semester} onChange={((e) => selectsem(e.target.value))}>
-                                    <option value="">Select Semester</option>
+                                    <option value="0">Select Semester</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                 </select>
@@ -136,6 +156,7 @@ export default function AdminResults() {
                                             <TableCell align="center">Roll No</TableCell>
                                             <TableCell align="center">Results</TableCell>
                                             <TableCell align="center">Add Subject</TableCell>
+                                            <TableCell align="center">Remove Student</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -168,7 +189,12 @@ export default function AdminResults() {
                                                         ))}
                                                     </Table>
                                                 </TableCell>
-                                                <TableCell align="center"><Link onClick={()=>addsubject(get_result[0].semester,row.rollno)}><AddCircleIcon color="primary" /></Link></TableCell>
+                                                <TableCell align="center">
+                                                    <Link onClick={()=>addsubject(get_result[0].semester,row.rollno)}><AddCircleIcon color="primary" /></Link>
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    <Link onClick={()=>removestud(get_result[0].semester,row.rollno)}><DeleteIcon color="secondary" /></Link>
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

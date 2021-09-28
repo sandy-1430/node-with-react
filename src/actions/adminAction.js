@@ -14,14 +14,17 @@ import {
     ADD_SUBJECT_FAIL,
     DELETE_SUBJECT_REQUEST,
     DELETE_SUBJECT_SUCCESS,
-    DELETE_SUBJECT_FAIL
+    DELETE_SUBJECT_FAIL,
+    DELETE_STUDENT_REQUEST,
+    DELETE_STUDENT_SUCCESS,
+    DELETE_STUDENT_FAIL
 } from "../constants/studentConstants";
 
 
 const adminResult = (sem) => async (dispatch) => {
     dispatch({ type: ADMIN_RESULT_REQUEST, payload: { sem } });
     try {
-        const { data } = await Axios.get("/result/" + sem);
+        const { data } = await Axios.get("https://sandy-node-restapi.herokuapp.com/result/" + sem);
         dispatch({ type: ADMIN_RESULT_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: ADMIN_RESULT_FAIL, payload: error.message });
@@ -31,7 +34,7 @@ const adminResult = (sem) => async (dispatch) => {
 const editResult = (sem, rollno, sub, code, marks) => async (dispatch) => {
     dispatch({ type: EDIT_RESULT_REQUEST, payload: { sem } });
     try {
-        const { data } = await Axios.put("/result/subject", { semester: sem, rollno: rollno, subject: sub, code: code, marks: marks });
+        const { data } = await Axios.put("https://sandy-node-restapi.herokuapp.com/result/subject", { semester: sem, rollno: rollno, subject: sub, code: code, marks: marks });
         dispatch({ type: EDIT_RESULT_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: EDIT_RESULT_FAIL, payload: error.message });
@@ -41,7 +44,7 @@ const editResult = (sem, rollno, sub, code, marks) => async (dispatch) => {
 const subjectAdd = (sem, rollno, sub, code, marks) => async (dispatch) => {
     dispatch({ type: ADD_SUBJECT_REQUEST, payload: { sem } });
     try {
-        const { data } = await Axios.post("/result/subject", { semester: sem, rollno: rollno, subject: sub, code: code, marks: marks });
+        const { data } = await Axios.post("https://sandy-node-restapi.herokuapp.com/result/subject", { semester: sem, rollno: rollno, subject: sub, code: code, marks: marks });
         dispatch({ type: ADD_SUBJECT_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: ADD_SUBJECT_FAIL, payload: error.message });
@@ -51,7 +54,7 @@ const subjectAdd = (sem, rollno, sub, code, marks) => async (dispatch) => {
 const Studentadd = (sem, students) => async (dispatch) => {
     dispatch({ type: ADD_STUDENT_REQUEST, payload: { sem } });
     try {
-        const { data } = await Axios.post('/result/student', { semester: sem, students: students });
+        const { data } = await Axios.post('https://sandy-node-restapi.herokuapp.com/result/student', { semester: sem, students: students });
         dispatch({ type: ADD_STUDENT_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: ADD_STUDENT_FAIL, payload: error.message });
@@ -61,13 +64,23 @@ const Studentadd = (sem, students) => async (dispatch) => {
 const deleteSubject = (sem, rollno,code) => async (dispatch) => {
     dispatch({ type: DELETE_SUBJECT_REQUEST, payload: { sem } });
     try {
-        const { data } = await Axios.delete("/result/" + sem + "/" + rollno +  "/" + code );
+        const { data } = await Axios.delete("https://sandy-node-restapi.herokuapp.com/result/" + sem + "/" + rollno +  "/" + code );
         dispatch({ type: DELETE_SUBJECT_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: DELETE_SUBJECT_FAIL, payload: error.message });
     }
 }
 
+const deleteStudent = (sem, rollno) => async (dispatch) => {
+    dispatch({ type: DELETE_STUDENT_REQUEST, payload: { sem } });
+    try {
+        const { data } = await Axios.delete("https://sandy-node-restapi.herokuapp.com/result/" + sem + "/" + rollno );
+        dispatch({ type: DELETE_STUDENT_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: DELETE_STUDENT_FAIL, payload: error.message });
+    }
+}
 
 
-export { adminResult, editResult, Studentadd, subjectAdd, deleteSubject };
+
+export { adminResult, editResult, Studentadd, subjectAdd, deleteSubject, deleteStudent };

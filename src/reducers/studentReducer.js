@@ -16,7 +16,10 @@ import {
     ADD_SUBJECT_FAIL,
     DELETE_SUBJECT_REQUEST,
     DELETE_SUBJECT_SUCCESS,
-    DELETE_SUBJECT_FAIL
+    DELETE_SUBJECT_FAIL,
+    DELETE_STUDENT_REQUEST,
+    DELETE_STUDENT_SUCCESS,
+    DELETE_STUDENT_FAIL
 } from "../constants/studentConstants";
 
 function studentResultReducer(state = {}, action) {
@@ -57,10 +60,15 @@ function studentResultReducer(state = {}, action) {
             return { loading: false, deletesub: action.payload };
         case DELETE_SUBJECT_FAIL:
             return { loading: false, error: action.payload };
+        case DELETE_STUDENT_REQUEST:
+            return { loading: true };
+        case DELETE_STUDENT_SUCCESS:
+            return { loading: false, deletestud: action.payload };
+        case DELETE_STUDENT_FAIL:
+            return { loading: false, error: action.payload };
         default:
             return state;
     }
 }
-export {
-    studentResultReducer
-};
+
+export { studentResultReducer };
