@@ -20,9 +20,8 @@ export default function Header() {
     const { userInfo } = userSignin;
     let userdata = userInfo ? jwt.decode(userInfo) : "";
 
-    let today = new Date();
-    let jwt_exp = userInfo ? userdata.exp : ''
-    let exp_date = new Date(jwt_exp * 1000);
+    // let today = new Date();
+    // let exp_date = userInfo ? new Date(userdata.exp * 1000) : '';
 
     const openprofile = (event) => {
         setProfile(event.currentTarget);
@@ -53,9 +52,9 @@ export default function Header() {
     };
 
     return (
-        <div className="">
-            { userdata && today > exp_date ? dispatch(logout()) : ''}
-            {userdata &&
+        <div>
+            { userdata && new Date() > new Date(userdata.exp * 1000) ? dispatch(logout()) : ''}
+             {userdata &&
                 <AppBar position="fixed">
                     <Toolbar>
                         <IconButton

@@ -25,9 +25,9 @@ function App() {
     <div className="App">
       {loading && <Loadingbox />}
       <Router forceRefresh={true} history={browserHistory} basename={process.env.PUBLIC_URL}>
-        {userInfo ? <Header /> : ''}
         <Switch>
           <Route path="/profile">
+            {userInfo ? <Header /> : ''}
             <Studentprofile />
           </Route>
           <Route path="/admin/studentresult">
@@ -37,6 +37,7 @@ function App() {
             <Admin />
           </Route>
           <Route path="/">
+            {userInfo ? <Header /> : ''}
             {userInfo ? <Home /> : <Studentlogin />}
           </Route>
         </Switch>
